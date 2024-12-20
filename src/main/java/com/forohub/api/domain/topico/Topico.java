@@ -59,6 +59,10 @@ public class Topico {
         }
     }
 
+    public void desactivarTopico() {
+        this.status = false;
+    }
+
     public Long getId() {
         return id;
     }
