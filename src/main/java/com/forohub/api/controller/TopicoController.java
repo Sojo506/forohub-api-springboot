@@ -1,9 +1,7 @@
 package com.forohub.api.controller;
 
-import com.forohub.api.domain.topico.DatosRegistroTopico;
-import com.forohub.api.domain.topico.DatosRespuestaTopico;
-import com.forohub.api.domain.topico.Topico;
-import com.forohub.api.domain.topico.TopicoRepository;
+import com.forohub.api.domain.topico.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/topicos")
@@ -57,5 +56,44 @@ public class TopicoController {
         var datosTopico = new DatosRespuestaTopico(t);
 
         return ResponseEntity.ok(datosTopico);
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity<DatosRespuestaTopico> actualizarTopico(
+            @PathVariable Long id,
+            @RequestBody @Valid DatosActualizarTopico datos
+    ) {
+        Optional<Topico> optionalTopico = topicoRepository.findById(id);
+        if (optionalTopico.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Topico topico = optionalTopico.get();
+
+        // Validar duplicados
+        boolean duplicado = topicoRepository.existsByTituloAndMensaje(
+                datos.titulo(),
+                datos.mensaje()
+        );
+        if (duplicado) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        topico.actualizarDatos(datos);
+
+        topicoRepository.save(topico);
+
+        // Preparar respuesta
+        DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(
+                topico.getId(),
+                topico.getTitulo(),
+                topico.getMensaje(),
+                topico.getAutor(),
+                topico.getCurso(),
+                topico.getFecha()
+        );
+
+        return ResponseEntity.ok(datosRespuestaTopico);
     }
 }
