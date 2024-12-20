@@ -96,4 +96,21 @@ public class TopicoController {
 
         return ResponseEntity.ok(datosRespuestaTopico);
     }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity<Void> eliminarTopico(@PathVariable Long id) {
+        // Verificar si el tópico existe
+        if (!topicoRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Topico t = topicoRepository.getReferenceById(id);
+
+        // desactivar el tópico
+        t.desactivarTopico();
+
+        // Retornar respuesta exitosa sin contenido
+        return ResponseEntity.noContent().build();
+    }
 }
