@@ -47,6 +47,18 @@ public class Topico {
         this.autor = "Sojo";
     }
 
+    public void actualizarDatos(DatosActualizarTopico datos) {
+        if (datos.titulo() != null) {
+            this.titulo = datos.titulo();
+        }
+        if (datos.mensaje() != null) {
+            this.mensaje = datos.mensaje();
+        }
+        if (datos.curso() != null) {
+            this.curso = datos.curso();
+        }
+    }
+
     public Long getId() {
         return id;
     }
