@@ -7,7 +7,7 @@
 4. [Tecnologías utilizadas](#tecnologías-utilizadas)
 
 ## Descripción del Proyecto
-Foro Hub es una API REST y un challenge construida con Spring Boot que permite gestionar tópicos dentro de un foro. Los usuarios pueden crear, actualizar, eliminar y consultar tópicos. Los tópicos contienen información como título, mensaje y curso relacionado, y están asociados a usuarios específicos. La API también incluye un sistema de autenticación basado en JWT para asegurar las operaciones.
+Foro Hub es una API REST construida con Spring Boot que permite gestionar tópicos dentro de un foro. Los usuarios pueden crear, actualizar, eliminar y consultar tópicos. Los tópicos contienen información como título, mensaje y curso relacionado, y están asociados a usuarios específicos. La API también incluye un sistema de autenticación basado en JWT para asegurar las operaciones.
 
 ## Estado del Proyecto
 - **Etapa actual**: Desarrollo en curso
