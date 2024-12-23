@@ -11,6 +11,6 @@ public record DatosRespuestaTopico(
         LocalDateTime fecha
 ) {
     public DatosRespuestaTopico(Topico t) {
-        this(t.getId(), t.getTitulo(), t.getMensaje(), t.getAutor(), t.getCurso(), t.getFecha());
+        this(t.getId(), t.getTitulo(), t.getMensaje(), t.getAutor().toString(), t.getCurso(), t.getFecha());
     }
 }

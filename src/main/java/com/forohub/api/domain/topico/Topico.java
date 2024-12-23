@@ -1,5 +1,6 @@
 package com.forohub.api.domain.topico;
 
+import com.forohub.api.domain.usuarios.Usuario;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,14 +22,18 @@ public class Topico {
     private String mensaje;
     private LocalDateTime fecha;
     private Boolean status;
-    private String autor;
+
+    @ManyToOne
+    @JoinColumn(name = "autor")  // Relación con Usuario
+    private Usuario autor;
+
     private String curso;
 
     public Topico() {
 
     }
 
-    public Topico(Long id, String titulo, String mensaje, LocalDateTime fecha, Boolean status, String autor, String curso) {
+    public Topico(Long id, String titulo, String mensaje, LocalDateTime fecha, Boolean status, Usuario autor, String curso) {
         this.id = id;
         this.titulo = titulo;
         this.mensaje = mensaje;
@@ -38,13 +43,13 @@ public class Topico {
         this.curso = curso;
     }
 
-    public Topico(@Valid DatosRegistroTopico datosRegistroTopico) {
+    public Topico(@Valid DatosRegistroTopico datosRegistroTopico, Usuario usuario) {
         this.status = true;
         this.titulo = datosRegistroTopico.titulo();
         this.mensaje = datosRegistroTopico.mensaje();
         this.fecha = LocalDateTime.now();
         this.curso = datosRegistroTopico.curso();
-        this.autor = "Sojo";
+        this.autor = usuario;
     }
 
     public void actualizarDatos(DatosActualizarTopico datos) {
@@ -83,7 +88,7 @@ public class Topico {
         return status;
     }
 
-    public String getAutor() {
+    public Usuario getAutor() {
         return autor;
     }
 

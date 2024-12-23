@@ -1,12 +1,15 @@
 package com.forohub.api.controller;
 
 import com.forohub.api.domain.topico.*;
+import com.forohub.api.domain.usuarios.Usuario;
+import com.forohub.api.domain.usuarios.UsuarioRepository;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,10 +21,12 @@ import java.util.Optional;
 public class TopicoController {
 
     private TopicoRepository topicoRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
-    public TopicoController(TopicoRepository topicoRepository) {
+    public TopicoController(TopicoRepository topicoRepository, UsuarioRepository usuarioRepository) {
         this.topicoRepository = topicoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @PostMapping
@@ -32,12 +37,16 @@ public class TopicoController {
         if (topicoRepository.existsByTituloAndMensaje(datosRegistroTopico.titulo(), datosRegistroTopico.mensaje())) {
             return ResponseEntity.badRequest().body(null); // Manejar error adecuadamente en un caso real
         }
-        Topico topico = topicoRepository.save(new Topico(datosRegistroTopico));
+
+        Usuario usuario = usuarioRepository.findById(datosRegistroTopico.idUsuario())
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        Topico topico = topicoRepository.save(new Topico(datosRegistroTopico, usuario));
         DatosRespuestaTopico datosRespuestaTopico = new DatosRespuestaTopico(
                 topico.getId(),
                 topico.getTitulo(),
                 topico.getMensaje(),
-                topico.getAutor(),
+                topico.getAutor().toString(),
                 topico.getCurso(),
                 topico.getFecha());
 
@@ -89,7 +98,7 @@ public class TopicoController {
                 topico.getId(),
                 topico.getTitulo(),
                 topico.getMensaje(),
-                topico.getAutor(),
+                topico.getAutor().toString(),
                 topico.getCurso(),
                 topico.getFecha()
         );

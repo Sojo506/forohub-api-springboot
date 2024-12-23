@@ -1,5 +1,6 @@
 package com.forohub.api.domain.usuarios;
 
+import com.forohub.api.domain.topico.Topico;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -26,6 +27,9 @@ public class Usuario implements UserDetails {
     private String login;
     private String password;
 
+    @OneToMany(mappedBy = "autor")
+    private List<Topico> topicos;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -39,6 +43,10 @@ public class Usuario implements UserDetails {
     @Override
     public String getUsername() {
         return login;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
